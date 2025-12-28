@@ -63,3 +63,5 @@ serviceAccountKey.json
 
 # next.js build output
 .next
+dist/
+
