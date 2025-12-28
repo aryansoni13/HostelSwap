@@ -84,7 +84,7 @@ console.log("***************************************************\n\n");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
