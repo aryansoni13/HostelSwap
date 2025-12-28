@@ -89,7 +89,7 @@ const convertFirebaseUserToAppUser = async (
     // 1. Check if user is an admin
     // We wrap this in its own try-catch because if the user is NOT an admin,
     // Firestore rules might throw "permission-denied" when trying to read the admins collection.
-    let adminData = null;
+    let adminData: any = null;
     try {
       const adminDocRef = doc(db, "admins", firebaseUser.uid);
       const adminSnapshot = (await Promise.race([
@@ -98,7 +98,7 @@ const convertFirebaseUserToAppUser = async (
       ])) as any;
 
       if (adminSnapshot.exists()) {
-        adminData = adminSnapshot.data();
+        adminData = adminSnapshot.data() as any;
       }
     } catch (error) {
       // Permission denied or other error -> likely not an admin
@@ -106,10 +106,11 @@ const convertFirebaseUserToAppUser = async (
     }
 
     if (adminData) {
+      const d = adminData as any;
       return {
         id: firebaseUser.uid,
-        name: adminData.username || firebaseUser.displayName || "",
-        email: adminData.email || firebaseUser.email || "",
+        name: d.username || firebaseUser.displayName || "",
+        email: d.email || firebaseUser.email || "",
         hostelName: "",
         roomNumber: "",
         isAdmin: true,
@@ -117,7 +118,7 @@ const convertFirebaseUserToAppUser = async (
     }
 
     // 2. If not admin (or check failed), check student profile
-    let studentData = null;
+    let studentData: any = null;
     try {
       const studentDocRef = doc(db, "students", firebaseUser.uid);
       const studentSnapshot = (await Promise.race([
@@ -126,19 +127,20 @@ const convertFirebaseUserToAppUser = async (
       ])) as any;
 
       if (studentSnapshot.exists()) {
-        studentData = studentSnapshot.data();
+        studentData = studentSnapshot.data() as any;
       }
     } catch (error) {
       console.error("Error fetching student profile:", error);
     }
 
     if (studentData) {
+      const d = studentData as any;
       return {
         id: firebaseUser.uid,
-        name: studentData.name || firebaseUser.displayName || "",
-        email: studentData.email || firebaseUser.email || "",
-        hostelName: studentData.hostel || "",
-        roomNumber: studentData.roomNumber || "",
+        name: d.name || firebaseUser.displayName || "",
+        email: d.email || firebaseUser.email || "",
+        hostelName: d.hostel || "",
+        roomNumber: d.roomNumber || "",
         isAdmin: false,
       };
     }

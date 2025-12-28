@@ -70,6 +70,7 @@ app.use(
       "http://localhost:5173",
       "http://localhost:3000",
       "http://localhost:5174",
+      process.env.CLIENT_URL || "*", // Allow deployed frontend
     ],
     credentials: true,
   })
@@ -85,14 +86,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/swap", swapRoutes);
 
-// 404 handler
-app.use((req, res, next) => {
-  res.status(404).json({ message: "Not found" });
+// Catch-all route for SPA (React) - must be after API routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 // Global error handler
