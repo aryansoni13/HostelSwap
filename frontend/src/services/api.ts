@@ -2,7 +2,11 @@ import axios from "axios";
 import { auth } from "../config/firebase";
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+  // In production (Render), use relative path which proxies to the same domain.
+  // In development, look for env var or fallback to localhost.
+  baseURL: import.meta.env.PROD
+    ? ""
+    : import.meta.env.VITE_API_URL || "http://localhost:3000",
   headers: {
     "Content-Type": "application/json",
   },
