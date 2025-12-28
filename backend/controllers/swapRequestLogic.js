@@ -221,20 +221,17 @@ exports.requestSwapSafe = async (req, res) => {
     const swapRequestData = {
       requesterId: requesterId,
       requesterName: requesterData.name,
+      requesterEmail: requesterData.email,
       requesterHostel: requesterData.hostel,
       requesterRoom: requesterData.roomNumber,
       requesterBedType: requesterData.bedType,
 
       targetStudentId: target.uid || target.id,
       targetName: target.name,
+      targetEmail: target.email,
       targetHostel: target.hostel,
       targetRoom: target.roomNumber,
       targetBedType: target.bedType,
-
-      targetStudentId: target.uid || target.id,
-      targetName: target.name,
-      targetHostel: target.hostel,
-      targetRoom: target.roomNumber,
 
       status: "pending",
       message: req.body.message || "",

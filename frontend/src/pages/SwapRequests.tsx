@@ -57,17 +57,17 @@ const SwapRequests: React.FC = () => {
       return {
         id: doc.id,
         requesterId: data.requesterId,
-        requesterName: "Student", // In a real app, we'd fetch these details
-        requesterEmail: "student@example.com",
-        requesterHostel: "Block 1",
-        requesterRoom: "101",
-        requesterBedType: "4 bedded",
+        requesterName: data.requesterName || "Unknown Student",
+        requesterEmail: data.requesterEmail || "No Email",
+        requesterHostel: data.requesterHostel || "Unknown",
+        requesterRoom: data.requesterRoom || "Unknown",
+        requesterBedType: data.requesterBedType || "Unknown",
         targetStudentId: data.targetStudentId,
-        targetName: "Target Student",
-        targetEmail: "target@example.com",
-        targetHostel: "Block 2",
-        targetRoom: "201",
-        targetBedType: "3 bedded",
+        targetName: data.targetName || "Unknown Target",
+        targetEmail: data.targetEmail || "No Email",
+        targetHostel: data.targetHostel || "Unknown",
+        targetRoom: data.targetRoom || "Unknown",
+        targetBedType: data.targetBedType || "Unknown",
         message: data.message || "",
         status: data.status,
         createdAt:
@@ -445,6 +445,8 @@ const SwapRequests: React.FC = () => {
   );
 };
 
+import { doc, getDoc } from "firebase/firestore";
+
 interface RequestCardProps {
   request: SwapRequest;
   onAccept: (id: string) => void;
@@ -464,13 +466,74 @@ const RequestCard: React.FC<RequestCardProps> = ({
   getStatusIcon,
   isSent = false,
 }) => {
-  const displayName = isSent ? request.targetName : request.requesterName;
-  const displayEmail = isSent ? request.targetEmail : request.requesterEmail;
-  const displayHostel = isSent ? request.targetHostel : request.requesterHostel;
-  const displayRoom = isSent ? request.targetRoom : request.requesterRoom;
-  const displayBedType = isSent
-    ? request.targetBedType
-    : request.requesterBedType;
+  const [enrichedData, setEnrichedData] = useState<{
+    displayName: string;
+    displayEmail: string;
+    displayHostel: string;
+    displayRoom: string | number;
+    displayBedType: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      // Determine which ID to fetch
+      const studentId = isSent ? request.targetStudentId : request.requesterId;
+
+      // Check if we need to fetch (e.g. if email is missing)
+      const currentEmail = isSent
+        ? request.targetEmail
+        : request.requesterEmail;
+
+      // We fetch if email is missing or placeholder
+      if (!currentEmail || currentEmail === "No Email") {
+        try {
+          // Try to look up by ID first (assuming it is a UID)
+          // Note: our system sometimes used email as ID, sometimes UID.
+          // Best effort lookup.
+          let studentDoc = await getDoc(doc(db, "students", studentId));
+
+          if (studentDoc.exists()) {
+            const data = studentDoc.data();
+            setEnrichedData({
+              displayName:
+                data.name ||
+                (isSent ? request.targetName : request.requesterName),
+              displayEmail: data.email || "No Email",
+              displayHostel:
+                data.hostel ||
+                (isSent ? request.targetHostel : request.requesterHostel),
+              displayRoom:
+                data.roomNumber ||
+                (isSent ? request.targetRoom : request.requesterRoom),
+              displayBedType:
+                data.bedType ||
+                (isSent ? request.targetBedType : request.requesterBedType),
+            });
+          }
+        } catch (err) {
+          console.error("Failed to enrich card data", err);
+        }
+      }
+    };
+
+    fetchStudentData();
+  }, [request, isSent]);
+
+  const displayName =
+    enrichedData?.displayName ||
+    (isSent ? request.targetName : request.requesterName);
+  const displayEmail =
+    enrichedData?.displayEmail ||
+    (isSent ? request.targetEmail : request.requesterEmail);
+  const displayHostel =
+    enrichedData?.displayHostel ||
+    (isSent ? request.targetHostel : request.requesterHostel);
+  const displayRoom =
+    enrichedData?.displayRoom ||
+    (isSent ? request.targetRoom : request.requesterRoom);
+  const displayBedType =
+    enrichedData?.displayBedType ||
+    (isSent ? request.targetBedType : request.requesterBedType);
 
   return (
     <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">

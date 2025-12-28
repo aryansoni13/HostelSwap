@@ -53,6 +53,7 @@ const logger = require("morgan");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
+const userRoutes = require("./routes/user");
 const swapRoutes = require("./routes/swap");
 
 // Load environment variables
@@ -93,6 +94,7 @@ app.use(express.static(path.join(__dirname, "../frontend/dist")));
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/swap", swapRoutes);
+app.use("/api/user", userRoutes);
 
 // Catch-all route for SPA (React) - must be after API routes
 app.get("*", (req, res) => {

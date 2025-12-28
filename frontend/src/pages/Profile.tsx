@@ -210,24 +210,12 @@ const Profile: React.FC = () => {
   const handleSave = async () => {
     setLoading(true);
     try {
-      // This would be an API call to update user profile
       await api.put("/api/user/profile", {
         ...formData,
         roomNumber: Number(formData.roomNumber),
       });
       toast.success("Profile updated successfully!");
       setIsEditing(false);
-
-      // Update local storage with new user data
-      const updatedUser = {
-        ...user,
-        name: formData.name,
-        email: formData.email,
-        hostelName: formData.hostel,
-        bedType: formData.bedType,
-        roomNumber: formData.roomNumber,
-      };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Failed to update profile");
     } finally {
@@ -500,24 +488,36 @@ const Profile: React.FC = () => {
             </div>
 
             {swapHistory.length > 0 ? (
-              <div className="relative border-l-2 border-gray-100 dark:border-gray-700 ml-3 space-y-6">
-                {swapHistory.map((item) => (
-                  <div key={item.id} className="relative pl-6">
-                    <div className="absolute -left-[9px] top-1 bg-white dark:bg-gray-800 border-2 border-indigo-500 w-4 h-4 rounded-full"></div>
-                    <div>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 flex items-center">
-                        <Calendar className="h-3 w-3 mr-1" />
-                        {item.date}
-                      </p>
-                      <p className="font-semibold text-gray-900 dark:text-white text-sm">
-                        Swapped with {item.otherPerson}
-                      </p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 bg-gray-50 dark:bg-gray-700/50 p-2 rounded-lg inline-block">
-                        {item.hostel}, Room {item.room}
-                      </p>
+              <div className="max-h-[260px] overflow-y-auto pr-2 custom-scrollbar">
+                <div className="space-y-3 pb-2">
+                  {swapHistory.map((item) => (
+                    <div
+                      key={item.id}
+                      className="bg-gray-50 dark:bg-gray-700/30 p-4 rounded-xl border border-gray-100 dark:border-gray-700 flex items-center justify-between group hover:border-indigo-200 dark:hover:border-indigo-900/50 transition-colors"
+                    >
+                      <div>
+                        <p className="font-semibold text-gray-900 dark:text-white text-sm">
+                          Swapped with{" "}
+                          <span className="text-indigo-600 dark:text-indigo-400">
+                            {item.otherPerson}
+                          </span>
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 flex items-center font-medium">
+                          <Calendar className="h-3 w-3 mr-1 opacity-70" />
+                          {item.date}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-bold text-gray-700 dark:text-gray-200">
+                          {item.hostel}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                          #{item.room}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             ) : (
               <div className="text-center py-8">
