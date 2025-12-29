@@ -7,5 +7,7 @@ const authMiddleware = require("../middlewares/auth");
 router.use(authMiddleware);
 
 router.put("/profile", userController.updateProfile);
+router.post("/upload-id-card", userController.uploadIdCard);
+router.post("/request-verification", userController.requestVerification);
 
 module.exports = router;

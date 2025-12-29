@@ -21,7 +21,14 @@ exports.increaseRooms = async (req, res) => {
       .object({
         hostel: hostelNameEnum,
         count: z.number().min(1),
-        bedType: z.enum(["4 bedded", "3 bedded", "2 bedded", "1 bedded"]),
+        bedType: z.enum([
+          "8 bedded",
+          "6 bedded",
+          "4 bedded",
+          "3 bedded",
+          "2 bedded",
+          "1 bedded",
+        ]),
       })
       .parse(req.body);
 
@@ -71,7 +78,14 @@ exports.decreaseRooms = async (req, res) => {
       .object({
         hostel: hostelNameEnum,
         count: z.number().min(1),
-        bedType: z.enum(["4 bedded", "3 bedded", "2 bedded", "1 bedded"]),
+        bedType: z.enum([
+          "8 bedded",
+          "6 bedded",
+          "4 bedded",
+          "3 bedded",
+          "2 bedded",
+          "1 bedded",
+        ]),
       })
       .parse(req.body);
 
@@ -136,9 +150,17 @@ exports.verifyUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { isVerified } = req.body;
-    await db.collection("students").doc(id).update({ isVerified });
+
+    // Update both isVerified and verificationStatus
+    const updateData = {
+      isVerified,
+      verificationStatus: isVerified ? "verified" : "rejected",
+      verificationReviewedAt: new Date(),
+    };
+
+    await db.collection("students").doc(id).update(updateData);
     res.json({
-      message: `User ${isVerified ? "verified" : "unverified"} successfully`,
+      message: `User ${isVerified ? "verified" : "rejected"} successfully`,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -184,6 +206,36 @@ exports.adminUpdateSwapStatus = async (req, res) => {
     await db.collection("swapRequests").doc(id).update({ status });
     res.json({ message: `Request ${status}` });
   } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Get all students with pending verification requests
+exports.getPendingVerifications = async (req, res) => {
+  try {
+    const snapshot = await db
+      .collection("students")
+      .where("verificationStatus", "==", "pending")
+      .get();
+
+    const pendingUsers = [];
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      pendingUsers.push({
+        id: doc.id,
+        name: data.name || "Unknown",
+        email: data.email || "No email",
+        hostel: data.hostel || "Not assigned",
+        roomNumber: data.roomNumber || "N/A",
+        bedType: data.bedType || "N/A",
+        idCardUrl: data.idCardUrl || null,
+        verificationRequestedAt: data.verificationRequestedAt || null,
+      });
+    });
+
+    res.json(pendingUsers);
+  } catch (err) {
+    console.error("Error getting pending verifications:", err);
     res.status(500).json({ message: err.message });
   }
 };

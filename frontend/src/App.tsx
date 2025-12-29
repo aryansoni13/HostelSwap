@@ -24,7 +24,7 @@ function App() {
         theme === "dark" ? "dark" : ""
       }`}
     >
-      <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <div className="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col">
         <Navbar />
         <main className="container mx-auto px-4 py-8">
           <Routes>
@@ -112,6 +112,23 @@ function App() {
             />
           </Routes>
         </main>
+
+        {/* Footer */}
+        <footer className="mt-auto py-6 border-t border-gray-800/50">
+          <div className="container mx-auto px-4">
+            <p className="text-center text-sm text-gray-400">
+              Created and maintained by{" "}
+              <a
+                href="https://www.linkedin.com/in/aryan-soni-26794924a/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
+              >
+                Aryan Soni
+              </a>
+            </p>
+          </div>
+        </footer>
       </div>
     </div>
   );

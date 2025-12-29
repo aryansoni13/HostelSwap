@@ -41,5 +41,11 @@ router.put(
   adminMiddleware,
   adminController.adminUpdateSwapStatus
 );
+router.get(
+  "/pending-verifications",
+  authMiddleware,
+  adminMiddleware,
+  adminController.getPendingVerifications
+);
 
 module.exports = router;

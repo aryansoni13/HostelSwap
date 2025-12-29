@@ -13,6 +13,12 @@ import {
   History,
   Calendar,
   Trash2,
+  Shield,
+  Upload,
+  CheckCircle,
+  Clock,
+  XCircle,
+  Camera,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
@@ -39,11 +45,102 @@ const Profile: React.FC = () => {
   });
   const [swapHistory, setSwapHistory] = useState<SwapHistoryItem[]>([]);
 
+  // Verification state
+  const [idCardPreview, setIdCardPreview] = useState<string | null>(null);
+  const [verificationStatus, setVerificationStatus] = useState<
+    "none" | "pending" | "verified" | "rejected"
+  >("none");
+  const [uploadingId, setUploadingId] = useState(false);
+  const [requestingVerification, setRequestingVerification] = useState(false);
+
   React.useEffect(() => {
     if (user) {
       fetchSwapHistory();
+      fetchVerificationStatus();
     }
   }, [user]);
+
+  const fetchVerificationStatus = async () => {
+    if (!user) return;
+    try {
+      // Fetch from Firestore to get current status
+      const studentDoc = await getDocs(
+        query(collection(db, "students"), where("email", "==", user.email))
+      );
+      if (!studentDoc.empty) {
+        const data = studentDoc.docs[0].data();
+        if (data.isVerified) {
+          setVerificationStatus("verified");
+        } else if (data.verificationStatus) {
+          setVerificationStatus(data.verificationStatus as any);
+        }
+        if (data.idCardUrl) {
+          setIdCardPreview(data.idCardUrl);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching verification status:", error);
+    }
+  };
+
+  const handleIdCardUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file");
+      return;
+    }
+
+    // Validate file size (2MB limit)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image must be less than 2MB");
+      return;
+    }
+
+    setUploadingId(true);
+    try {
+      // Convert to base64
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const base64Image = event.target?.result as string;
+        setIdCardPreview(base64Image);
+
+        // Upload to backend
+        await api.post("/api/user/upload-id-card", {
+          idCardImage: base64Image,
+        });
+        toast.success("ID card uploaded successfully!");
+        setUploadingId(false);
+      };
+      reader.onerror = () => {
+        toast.error("Failed to read image file");
+        setUploadingId(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to upload ID card");
+      setUploadingId(false);
+    }
+  };
+
+  const handleRequestVerification = async () => {
+    setRequestingVerification(true);
+    try {
+      await api.post("/api/user/request-verification");
+      setVerificationStatus("pending");
+      toast.success(
+        "Verification request submitted! Please wait for admin approval."
+      );
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Failed to submit verification request"
+      );
+    } finally {
+      setRequestingVerification(false);
+    }
+  };
 
   const fetchSwapHistory = async () => {
     if (!user) return;
@@ -433,6 +530,163 @@ const Profile: React.FC = () => {
                     {user.bedType}
                   </div>
                 </div>
+              </div>
+            )}
+          </div>
+
+          {/* ID Verification Card */}
+          <div className="card p-6">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center justify-between">
+              <div className="flex items-center">
+                <Shield className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400" />
+                ID Verification
+              </div>
+              {/* Status Badge */}
+              {verificationStatus === "verified" && (
+                <span className="flex items-center gap-1.5 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-sm font-medium">
+                  <CheckCircle className="w-4 h-4" />
+                  Verified
+                </span>
+              )}
+              {verificationStatus === "pending" && (
+                <span className="flex items-center gap-1.5 px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded-full text-sm font-medium">
+                  <Clock className="w-4 h-4" />
+                  Pending Review
+                </span>
+              )}
+              {verificationStatus === "rejected" && (
+                <span className="flex items-center gap-1.5 px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full text-sm font-medium">
+                  <XCircle className="w-4 h-4" />
+                  Rejected
+                </span>
+              )}
+              {verificationStatus === "none" && !user?.isVerified && (
+                <span className="flex items-center gap-1.5 px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full text-sm font-medium">
+                  <Shield className="w-4 h-4" />
+                  Not Verified
+                </span>
+              )}
+            </h3>
+
+            {verificationStatus === "verified" || user?.isVerified ? (
+              <div className="text-center py-6">
+                <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+                </div>
+                <p className="text-green-600 dark:text-green-400 font-semibold text-lg">
+                  Your account is verified!
+                </p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                  You have full access to all features.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {/* ID Card Upload */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Upload Your Student ID Card
+                  </label>
+                  <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 text-center hover:border-primary-400 dark:hover:border-primary-500 transition-colors">
+                    {idCardPreview ? (
+                      <div className="space-y-3">
+                        <img
+                          src={idCardPreview}
+                          alt="ID Card Preview"
+                          className="max-h-48 mx-auto rounded-lg shadow-md"
+                        />
+                        <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                          <Camera className="w-4 h-4" />
+                          Change Image
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleIdCardUpload}
+                            disabled={uploadingId}
+                          />
+                        </label>
+                      </div>
+                    ) : (
+                      <label className="cursor-pointer block py-8">
+                        <Upload className="w-10 h-10 mx-auto text-gray-400 mb-3" />
+                        <p className="text-gray-600 dark:text-gray-400 font-medium">
+                          {uploadingId
+                            ? "Uploading..."
+                            : "Click to upload your ID card"}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          PNG, JPG up to 2MB
+                        </p>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleIdCardUpload}
+                          disabled={uploadingId}
+                        />
+                      </label>
+                    )}
+                  </div>
+                </div>
+
+                {/* Request Verification Button */}
+                {verificationStatus === "none" && idCardPreview && (
+                  <button
+                    onClick={handleRequestVerification}
+                    disabled={requestingVerification}
+                    className="w-full btn-primary flex items-center justify-center gap-2 py-3"
+                  >
+                    {requestingVerification ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    ) : (
+                      <>
+                        <Shield className="w-5 h-5" />
+                        Request Verification
+                      </>
+                    )}
+                  </button>
+                )}
+
+                {verificationStatus === "pending" && (
+                  <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-800">
+                    <div className="flex items-start gap-3">
+                      <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+                      <div>
+                        <p className="font-medium text-yellow-800 dark:text-yellow-300">
+                          Verification Pending
+                        </p>
+                        <p className="text-sm text-yellow-700 dark:text-yellow-400 mt-1">
+                          Your ID card is being reviewed by an admin. This
+                          usually takes 24-48 hours.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {verificationStatus === "rejected" && (
+                  <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">
+                    <div className="flex items-start gap-3">
+                      <XCircle className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5" />
+                      <div>
+                        <p className="font-medium text-red-800 dark:text-red-300">
+                          Verification Rejected
+                        </p>
+                        <p className="text-sm text-red-700 dark:text-red-400 mt-1">
+                          Your verification was rejected. Please upload a clear,
+                          valid ID card and try again.
+                        </p>
+                        <button
+                          onClick={() => setVerificationStatus("none")}
+                          className="mt-2 text-sm font-medium text-red-600 dark:text-red-400 hover:underline"
+                        >
+                          Try Again
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
