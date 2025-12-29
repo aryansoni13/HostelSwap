@@ -121,23 +121,23 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center animate-fade-in">
+    <div className="min-h-[80vh] flex items-center justify-center animate-fade-in px-4">
       <div className="max-w-md w-full relative z-10">
-        <div className="glass-panel rounded-2xl p-8 backdrop-blur-xl">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-full">
+        <div className="glass-panel rounded-xl sm:rounded-2xl p-6 sm:p-8 backdrop-blur-xl">
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="flex justify-center mb-3 sm:mb-4">
+              <div className="p-2.5 sm:p-3 bg-primary-100 dark:bg-primary-900/30 rounded-full">
                 {isAdmin ? (
-                  <Shield className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+                  <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-primary-600 dark:text-primary-400" />
                 ) : (
-                  <LogIn className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+                  <LogIn className="h-6 w-6 sm:h-8 sm:w-8 text-primary-600 dark:text-primary-400" />
                 )}
               </div>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
               {isAdmin ? "Admin Login" : "Welcome Back"}
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mt-2">
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mt-2">
               {isAdmin
                 ? "Sign in to admin dashboard"
                 : "Sign in to your account to continue"}
@@ -145,34 +145,34 @@ const Login: React.FC = () => {
           </div>
 
           {/* Login Type Toggle */}
-          <div className="flex mb-8 bg-gray-100/50 dark:bg-gray-800/50 p-1.5 rounded-xl">
+          <div className="flex mb-6 sm:mb-8 bg-gray-100/50 dark:bg-gray-800/50 p-1.5 rounded-xl">
             <button
               type="button"
               onClick={() => setIsAdmin(false)}
-              className={`flex-1 flex items-center justify-center py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${
+              className={`flex-1 flex items-center justify-center py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
                 !isAdmin
                   ? "bg-white dark:bg-gray-800 text-primary-600 dark:text-primary-400 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700"
                   : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50"
               }`}
             >
-              <User className="h-4 w-4 mr-2" />
+              <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
               Student
             </button>
             <button
               type="button"
               onClick={() => setIsAdmin(true)}
-              className={`flex-1 flex items-center justify-center py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-300 ${
+              className={`flex-1 flex items-center justify-center py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
                 isAdmin
                   ? "bg-white dark:bg-gray-800 text-primary-600 dark:text-primary-400 shadow-sm ring-1 ring-gray-200 dark:ring-gray-700"
                   : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/50"
               }`}
             >
-              <Shield className="h-4 w-4 mr-2" />
+              <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
               Admin
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {isAdmin ? (
               <div>
                 <label
@@ -295,8 +295,8 @@ const Login: React.FC = () => {
 
         {showReset && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
                 {resetStage === "request"
                   ? "Reset your password"
                   : "Set new password"}

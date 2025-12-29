@@ -183,45 +183,45 @@ const Students: React.FC = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto animate-fade-in">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold heading-gradient mb-2">
+    <div className="max-w-6xl mx-auto animate-fade-in px-4 sm:px-6">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold heading-gradient mb-2">
           Find Students
         </h1>
-        <p className="text-gray-600 dark:text-gray-300">
+        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
           Browse and connect with other students for room swapping.
         </p>
       </div>
 
       {/* Search and Filters */}
-      <div className="card p-6 mb-8">
-        <div className="space-y-4">
+      <div className="card p-4 sm:p-6 mb-6 sm:mb-8">
+        <div className="space-y-3 sm:space-y-4">
           {/* Search Bar */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
             <input
               type="text"
               placeholder="Search by name or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="input-field pl-10 bg-white dark:bg-gray-800"
+              className="input-field pl-9 sm:pl-10 bg-white dark:bg-gray-800 text-sm sm:text-base"
             />
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap gap-4 items-center">
-            <div className="flex items-center">
-              <Filter className="h-5 w-5 text-gray-600 dark:text-gray-400 mr-2" />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mr-3">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4">
+            <div className="flex items-center w-full sm:w-auto">
+              <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-400 mr-2 flex-shrink-0" />
+              <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
                 Filter by:
               </span>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 flex-1 sm:flex-none">
               <select
                 value={filters.hostel}
                 onChange={(e) => handleFilterChange("hostel", e.target.value)}
-                className="input-field min-w-[150px]"
+                className="input-field w-full sm:min-w-[150px] text-sm sm:text-base"
               >
                 <option value="">All Hostels</option>
                 {hostelOptions.map((hostel) => (
@@ -234,7 +234,7 @@ const Students: React.FC = () => {
               <select
                 value={filters.bedType}
                 onChange={(e) => handleFilterChange("bedType", e.target.value)}
-                className="input-field min-w-[150px]"
+                className="input-field w-full sm:min-w-[150px] text-sm sm:text-base"
               >
                 <option value="">All Bed Types</option>
                 {bedTypeOptions.map((bedType) => (
@@ -244,14 +244,17 @@ const Students: React.FC = () => {
                 ))}
               </select>
 
-              <button onClick={clearFilters} className="btn-secondary">
+              <button 
+                onClick={clearFilters} 
+                className="btn-secondary w-full sm:w-auto text-sm sm:text-base py-2 sm:py-2.5"
+              >
                 Clear Filters
               </button>
             </div>
           </div>
 
           {/* Results Count */}
-          <div className="text-sm text-gray-600 dark:text-gray-400">
+          <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
             Showing {filteredStudents.length} of {students.length} students
           </div>
         </div>
@@ -259,79 +262,81 @@ const Students: React.FC = () => {
 
       {/* Students Grid */}
       {filteredStudents.length === 0 ? (
-        <div className="text-center py-12">
-          <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
+        <div className="text-center py-8 sm:py-12">
+          <Users className="h-12 w-12 sm:h-16 sm:w-16 text-gray-400 mx-auto mb-3 sm:mb-4" />
+          <h3 className="text-lg sm:text-xl font-medium text-gray-900 dark:text-white mb-2">
             No students found
           </h3>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
             Try adjusting your search criteria or filters.
           </p>
         </div>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredStudents.map((student) => (
             <div
               key={student.id}
-              className="card p-6 hover:shadow-lg transition-shadow"
+              className="card p-4 sm:p-6 hover:shadow-lg transition-shadow"
             >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center">
-                  <div className="p-3 bg-gradient-to-br from-primary-100 to-indigo-100 dark:from-primary-900/30 dark:to-indigo-900/30 rounded-full mr-4 shadow-sm">
-                    <Users className="h-6 w-6 text-primary-600 dark:text-primary-400" />
+              <div className="flex items-start justify-between mb-3 sm:mb-4 gap-2">
+                <div className="flex items-center flex-1 min-w-0">
+                  <div className="p-2 sm:p-3 bg-gradient-to-br from-primary-100 to-indigo-100 dark:from-primary-900/30 dark:to-indigo-900/30 rounded-full mr-3 sm:mr-4 shadow-sm flex-shrink-0">
+                    <Users className="h-5 w-5 sm:h-6 sm:w-6 text-primary-600 dark:text-primary-400" />
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white truncate">
                       {student.name}
                     </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">
                       {student.email}
                     </p>
                   </div>
                 </div>
                 {student.isVerified && (
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                  <span className="inline-flex items-center px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 flex-shrink-0">
                     Verified
                   </span>
                 )}
               </div>
 
-              <div className="space-y-3 mb-4">
-                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                  <Building className="h-4 w-4 mr-2" />
+              <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
+                <div className="flex items-center text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                  <Building className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 flex-shrink-0" />
                   <span className="font-medium">Hostel:</span>
-                  <span className="ml-1">
+                  <span className="ml-1 truncate">
                     {student.hostel.charAt(0).toUpperCase() +
                       student.hostel.slice(1)}
                   </span>
                 </div>
 
-                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                  <Hash className="h-4 w-4 mr-2" />
+                <div className="flex items-center text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                  <Hash className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 flex-shrink-0" />
                   <span className="font-medium">Room:</span>
                   <span className="ml-1">{student.roomNumber}</span>
                 </div>
 
-                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                  <Bed className="h-4 w-4 mr-2" />
+                <div className="flex items-center text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                  <Bed className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 flex-shrink-0" />
                   <span className="font-medium">Bed Type:</span>
-                  <span className="ml-1">{student.bedType}</span>
+                  <span className="ml-1 truncate">{student.bedType}</span>
                 </div>
               </div>
 
               <div className="flex gap-2">
                 <button
                   onClick={() => sendSwapRequest(student)}
-                  className="flex-1 btn-primary flex items-center justify-center"
+                  className="flex-1 btn-primary flex items-center justify-center text-xs sm:text-sm sm:text-base py-2 sm:py-2.5"
                 >
-                  <RefreshCw className="h-4 w-4 mr-1" />
-                  Request Swap
+                  <RefreshCw className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
+                  <span className="hidden sm:inline">Request Swap</span>
+                  <span className="sm:hidden">Swap</span>
                 </button>
                 <a
                   href={`mailto:${student.email}`}
-                  className="btn-secondary flex items-center justify-center"
+                  className="btn-secondary flex items-center justify-center px-3 sm:px-5 py-2 sm:py-2.5 flex-shrink-0"
+                  aria-label="Send email"
                 >
-                  <Mail className="h-4 w-4" />
+                  <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </a>
               </div>
             </div>

@@ -31,15 +31,16 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="bg-white dark:bg-gray-800 shadow-lg border-b border-gray-200 dark:border-gray-700">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center space-x-2 text-xl font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+            className="flex items-center space-x-1.5 sm:space-x-2 text-lg sm:text-xl font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
           >
-            <RefreshCw className="h-6 w-6" />
-            <span>HostelSwap</span>
+            <RefreshCw className="h-5 w-5 sm:h-6 sm:w-6" />
+            <span className="hidden sm:inline">HostelSwap</span>
+            <span className="sm:hidden">HS</span>
           </Link>
 
           {/* Desktop Navigation */}

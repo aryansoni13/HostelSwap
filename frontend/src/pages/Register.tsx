@@ -78,24 +78,24 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center animate-fade-in">
+    <div className="min-h-[80vh] flex items-center justify-center animate-fade-in px-4 py-8">
       <div className="max-w-md w-full relative z-10">
-        <div className="glass-panel rounded-2xl p-8 backdrop-blur-xl">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-full">
-                <UserPlus className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+        <div className="glass-panel rounded-xl sm:rounded-2xl p-6 sm:p-8 backdrop-blur-xl">
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="flex justify-center mb-3 sm:mb-4">
+              <div className="p-2.5 sm:p-3 bg-primary-100 dark:bg-primary-900/30 rounded-full">
+                <UserPlus className="h-6 w-6 sm:h-8 sm:w-8 text-primary-600 dark:text-primary-400" />
               </div>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
               Create Account
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mt-2">
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mt-2">
               Join our hostel swapping community
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div>
               <label
                 htmlFor="name"
@@ -134,13 +134,13 @@ const Register: React.FC = () => {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label
                   htmlFor="hostel"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2"
                 >
-                  <Building className="inline h-4 w-4 mr-1" />
+                  <Building className="inline h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
                   Hostel Block
                 </label>
                 <select
@@ -149,7 +149,7 @@ const Register: React.FC = () => {
                   value={formData.hostel}
                   onChange={handleChange}
                   required
-                  className="input-field"
+                  className="input-field text-sm sm:text-base"
                 >
                   <option value="">Select Block</option>
                   {hostelOptions.map((hostel) => (
@@ -163,9 +163,9 @@ const Register: React.FC = () => {
               <div>
                 <label
                   htmlFor="bedType"
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2"
                 >
-                  <Bed className="inline h-4 w-4 mr-1" />
+                  <Bed className="inline h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
                   Bed Type
                 </label>
                 <select
@@ -174,7 +174,7 @@ const Register: React.FC = () => {
                   value={formData.bedType}
                   onChange={handleChange}
                   required
-                  className="input-field"
+                  className="input-field text-sm sm:text-base"
                 >
                   <option value="">Select Bed Type</option>
                   {bedTypeOptions.map((bedType) => (

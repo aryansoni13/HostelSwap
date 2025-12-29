@@ -355,37 +355,37 @@ const Profile: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="max-w-4xl mx-auto animate-fade-in pb-12">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold heading-gradient mb-2">My Profile</h1>
-        <p className="text-gray-600 dark:text-gray-300">
+    <div className="max-w-4xl mx-auto animate-fade-in pb-12 px-4 sm:px-6">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold heading-gradient mb-2">My Profile</h1>
+        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
           Manage your personal information and track your swap history.
         </p>
       </div>
 
       {/* Header Card */}
-      <div className="card p-6 mb-8 flex flex-col md:flex-row items-center md:items-start md:justify-between gap-6">
-        <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+      <div className="card p-4 sm:p-6 mb-6 sm:mb-8 flex flex-col md:flex-row items-center md:items-start md:justify-between gap-4 sm:gap-6">
+        <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-6 text-center md:text-left">
           <div className="relative">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-primary-500 to-indigo-600 flex items-center justify-center text-white shadow-lg">
-              <span className="text-4xl font-bold">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr from-primary-500 to-indigo-600 flex items-center justify-center text-white shadow-lg">
+              <span className="text-3xl sm:text-4xl font-bold">
                 {user.name.charAt(0).toUpperCase()}
               </span>
             </div>
-            <div className="absolute bottom-0 right-0 p-1.5 bg-green-500 rounded-full border-4 border-white dark:border-gray-800"></div>
+            <div className="absolute bottom-0 right-0 p-1 sm:p-1.5 bg-green-500 rounded-full border-2 sm:border-4 border-white dark:border-gray-800"></div>
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1">
               {user.name}
             </h2>
-            <div className="flex items-center justify-center md:justify-start text-gray-600 dark:text-gray-400 mb-4 md:mb-0">
-              <Mail className="h-4 w-4 mr-2" />
-              {user.email}
+            <div className="flex items-center justify-center md:justify-start text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 md:mb-0">
+              <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
+              <span className="truncate max-w-[200px] sm:max-w-none">{user.email}</span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full md:w-auto">
           {!isEditing ? (
             <button
               onClick={() => setIsEditing(true)}
@@ -439,13 +439,13 @@ const Profile: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {/* Left Column: Details */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           {/* Room Details Card */}
-          <div className="card p-6">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-              <Building className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400" />
+          <div className="card p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 flex items-center">
+              <Building className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-primary-600 dark:text-primary-400" />
               Room Information
             </h3>
 
@@ -499,35 +499,35 @@ const Profile: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="grid sm:grid-cols-3 gap-4">
-                <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                <div className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                   <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
                     Hostel Block
                   </p>
-                  <div className="flex items-center font-semibold text-gray-900 dark:text-white">
-                    <Building className="h-4 w-4 mr-2 text-primary-500" />
-                    {user.hostelName
+                  <div className="flex items-center font-semibold text-sm sm:text-base text-gray-900 dark:text-white">
+                    <Building className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-primary-500 flex-shrink-0" />
+                    <span className="truncate">{user.hostelName
                       ? user.hostelName.charAt(0).toUpperCase() +
                         user.hostelName.slice(1)
-                      : "Not Assigned"}
+                      : "Not Assigned"}</span>
                   </div>
                 </div>
-                <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                <div className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                   <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
                     Room Number
                   </p>
-                  <div className="flex items-center font-semibold text-gray-900 dark:text-white">
-                    <Hash className="h-4 w-4 mr-2 text-primary-500" />
+                  <div className="flex items-center font-semibold text-sm sm:text-base text-gray-900 dark:text-white">
+                    <Hash className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-primary-500 flex-shrink-0" />
                     {user.roomNumber || "N/A"}
                   </div>
                 </div>
-                <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                <div className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                   <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
                     Bed Type
                   </p>
-                  <div className="flex items-center font-semibold text-gray-900 dark:text-white">
-                    <Bed className="h-4 w-4 mr-2 text-primary-500" />
-                    {user.bedType}
+                  <div className="flex items-center font-semibold text-sm sm:text-base text-gray-900 dark:text-white">
+                    <Bed className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-primary-500 flex-shrink-0" />
+                    <span className="truncate">{user.bedType}</span>
                   </div>
                 </div>
               </div>
@@ -535,8 +535,8 @@ const Profile: React.FC = () => {
           </div>
 
           {/* ID Verification Card */}
-          <div className="card p-6">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center justify-between">
+          <div className="card p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center">
                 <Shield className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400" />
                 ID Verification
@@ -730,13 +730,13 @@ const Profile: React.FC = () => {
 
         {/* Right Column: History */}
         <div className="lg:col-span-1">
-          <div className="card p-6 h-full">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center">
-                <History className="h-5 w-5 mr-2 text-indigo-600 dark:text-indigo-400" />
+          <div className="card p-4 sm:p-6 h-full">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white flex items-center">
+                <History className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-indigo-600 dark:text-indigo-400" />
                 Swap History
               </h3>
-              <span className="bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300 text-xs font-bold px-2.5 py-1 rounded-full">
+              <span className="bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300 text-xs font-bold px-2 sm:px-2.5 py-1 rounded-full">
                 {swapHistory.length}
               </span>
             </div>

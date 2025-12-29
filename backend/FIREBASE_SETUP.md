@@ -88,3 +88,4 @@ You should see one of these messages when the server starts:
 - Make sure the file path is correct if using `FIREBASE_SERVICE_ACCOUNT_PATH`
 - Check that environment variables are loaded (restart server after adding to `.env`)
 
+
