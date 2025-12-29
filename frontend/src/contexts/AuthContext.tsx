@@ -86,7 +86,20 @@ const convertFirebaseUserToAppUser = async (
       setTimeout(() => reject(new Error("Firestore timeout")), 5000)
     );
 
-    // 1. Check if user is an admin
+    // 0. QUICK CHECK: If email matches admin pattern, assume Admin
+    const email = firebaseUser.email || "";
+    if (email.endsWith("@admin.hostelswap")) {
+      return {
+        id: firebaseUser.uid,
+        name: firebaseUser.displayName || email.split("@")[0] || "Admin",
+        email: email,
+        hostelName: "",
+        roomNumber: "",
+        isAdmin: true,
+      };
+    }
+
+    // 1. Check if user is an admin (Firestore)
     // We wrap this in its own try-catch because if the user is NOT an admin,
     // Firestore rules might throw "permission-denied" when trying to read the admins collection.
     let adminData: any = null;

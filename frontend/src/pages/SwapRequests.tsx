@@ -25,6 +25,77 @@ import { db } from "../config/firebase";
 import { SwapRequest } from "../types";
 import toast from "react-hot-toast";
 
+// Helper function to format dates from various formats
+const formatDate = (dateValue: any): string => {
+  if (!dateValue) return "No date";
+
+  try {
+    // Handle Firestore Timestamp with seconds
+    if (dateValue?.seconds) {
+      return new Date(dateValue.seconds * 1000).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
+
+    // Handle Firebase Timestamp object with toDate method
+    if (typeof dateValue?.toDate === "function") {
+      return dateValue.toDate().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
+
+    // Handle ISO string or Date object
+    const date = new Date(dateValue);
+    if (!isNaN(date.getTime())) {
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
+
+    return "Invalid date";
+  } catch {
+    return "Invalid date";
+  }
+};
+
+const formatTime = (dateValue: any): string => {
+  if (!dateValue) return "";
+
+  try {
+    if (dateValue?.seconds) {
+      return new Date(dateValue.seconds * 1000).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    if (typeof dateValue?.toDate === "function") {
+      return dateValue.toDate().toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    const date = new Date(dateValue);
+    if (!isNaN(date.getTime())) {
+      return date.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    return "";
+  } catch {
+    return "";
+  }
+};
+
 const SwapRequests: React.FC = () => {
   const { user } = useAuth();
   const [requests, setRequests] = useState<SwapRequest[]>([]);
@@ -613,9 +684,11 @@ const RequestCard: React.FC<RequestCardProps> = ({
         </div>
       )}
 
-      <div className="mt-2 text-xs text-gray-500 dark:text-gray-500">
-        {new Date(request.createdAt).toLocaleDateString()} at{" "}
-        {new Date(request.createdAt).toLocaleTimeString()}
+      <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+        <Clock className="w-3.5 h-3.5" />
+        <span>{formatDate(request.createdAt)}</span>
+        <span className="text-gray-300 dark:text-gray-600">•</span>
+        <span>{formatTime(request.createdAt)}</span>
       </div>
     </div>
   );

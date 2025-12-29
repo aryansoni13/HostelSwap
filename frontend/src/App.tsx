@@ -31,16 +31,44 @@ function App() {
             <Route
               path="/"
               element={
-                user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+                user ? (
+                  user.isAdmin ? (
+                    <Navigate to="/admin" />
+                  ) : (
+                    <Navigate to="/dashboard" />
+                  )
+                ) : (
+                  <Navigate to="/login" />
+                )
               }
             />
             <Route
               path="/login"
-              element={user ? <Navigate to="/dashboard" /> : <Login />}
+              element={
+                user ? (
+                  user.isAdmin ? (
+                    <Navigate to="/admin" />
+                  ) : (
+                    <Navigate to="/dashboard" />
+                  )
+                ) : (
+                  <Login />
+                )
+              }
             />
             <Route
               path="/register"
-              element={user ? <Navigate to="/dashboard" /> : <Register />}
+              element={
+                user ? (
+                  user.isAdmin ? (
+                    <Navigate to="/admin" />
+                  ) : (
+                    <Navigate to="/dashboard" />
+                  )
+                ) : (
+                  <Register />
+                )
+              }
             />
             <Route
               path="/dashboard"

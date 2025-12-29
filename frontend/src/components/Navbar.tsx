@@ -46,46 +46,48 @@ const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center space-x-6">
             {user && (
               <>
-                <Link
-                  to="/dashboard"
-                  className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                >
-                  <User className="h-4 w-4" />
-                  <span>Dashboard</span>
-                </Link>
-
-                <Link
-                  to="/swap-requests"
-                  className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                >
-                  <RefreshCw className="h-4 w-4" />
-                  <span>Swaps</span>
-                </Link>
-
-                <Link
-                  to="/students"
-                  className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                >
-                  <Users className="h-4 w-4" />
-                  <span>Students</span>
-                </Link>
-
-                <Link
-                  to="/profile"
-                  className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                >
-                  <UserCircle className="h-4 w-4" />
-                  <span>Profile</span>
-                </Link>
-
-                {user.isAdmin && (
+                {user.isAdmin ? (
                   <Link
                     to="/admin"
                     className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                   >
                     <Settings className="h-4 w-4" />
-                    <span>Admin</span>
+                    <span>Admin Dashboard</span>
                   </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/dashboard"
+                      className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                    >
+                      <User className="h-4 w-4" />
+                      <span>Dashboard</span>
+                    </Link>
+
+                    <Link
+                      to="/swap-requests"
+                      className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                      <span>Swaps</span>
+                    </Link>
+
+                    <Link
+                      to="/students"
+                      className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                    >
+                      <Users className="h-4 w-4" />
+                      <span>Students</span>
+                    </Link>
+
+                    <Link
+                      to="/profile"
+                      className="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                    >
+                      <UserCircle className="h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </>
                 )}
               </>
             )}
@@ -135,51 +137,53 @@ const Navbar: React.FC = () => {
             <div className="flex flex-col space-y-3">
               {user && (
                 <>
-                  <Link
-                    to="/dashboard"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <User className="h-4 w-4" />
-                    <span>Dashboard</span>
-                  </Link>
-
-                  <Link
-                    to="/swap-requests"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                    <span>Swaps</span>
-                  </Link>
-
-                  <Link
-                    to="/students"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <Users className="h-4 w-4" />
-                    <span>Students</span>
-                  </Link>
-
-                  <Link
-                    to="/profile"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <UserCircle className="h-4 w-4" />
-                    <span>Profile</span>
-                  </Link>
-
-                  {user.isAdmin && (
+                  {user.isAdmin ? (
                     <Link
                       to="/admin"
                       onClick={() => setIsMenuOpen(false)}
                       className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                       <Settings className="h-4 w-4" />
-                      <span>Admin</span>
+                      <span>Admin Dashboard</span>
                     </Link>
+                  ) : (
+                    <>
+                      <Link
+                        to="/dashboard"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      >
+                        <User className="h-4 w-4" />
+                        <span>Dashboard</span>
+                      </Link>
+
+                      <Link
+                        to="/swap-requests"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      >
+                        <RefreshCw className="h-4 w-4" />
+                        <span>Swaps</span>
+                      </Link>
+
+                      <Link
+                        to="/students"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      >
+                        <Users className="h-4 w-4" />
+                        <span>Students</span>
+                      </Link>
+
+                      <Link
+                        to="/profile"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      >
+                        <UserCircle className="h-4 w-4" />
+                        <span>Profile</span>
+                      </Link>
+                    </>
                   )}
                 </>
               )}
