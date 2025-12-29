@@ -13,6 +13,13 @@ import {
   Check,
   X,
 } from "lucide-react";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
+import { db } from "../config/firebase";
 import { SwapRequest } from "../types";
 import toast from "react-hot-toast";
 
@@ -27,23 +34,106 @@ const Dashboard: React.FC = () => {
   const [requestsLoading, setRequestsLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      fetchRecentRequests();
-    }
-  }, [user]);
+    if (!user) return;
 
-  const fetchRecentRequests = async () => {
-    try {
-      const response = await api.get("/api/swap/list");
-      setRecentRequests(response.data.swaps || []);
-    } catch (error: any) {
-      console.error("Failed to fetch requests:", error);
-      // Don't show error toast for this - just set empty array
-      setRecentRequests([]);
-    } finally {
-      setRequestsLoading(false);
-    }
-  };
+    setRequestsLoading(true);
+
+    // Create queries for both sent and received requests
+    // Note: We sort in memory to avoid Firestore index requirements
+    const sentQuery = query(
+      collection(db, "swapRequests"),
+      where("requesterId", "==", user.id)
+    );
+
+    const receivedQuery = query(
+      collection(db, "swapRequests"),
+      where("targetStudentId", "==", user.id)
+    );
+
+    // Helper to process snapshots
+    const processSnapshot = (doc: any) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        requesterId: data.requesterId,
+        requesterName: data.requesterName || "Unknown Student",
+        requesterEmail: data.requesterEmail || "No Email",
+        requesterHostel: data.requesterHostel || "Unknown",
+        requesterRoom: data.requesterRoom || "Unknown",
+        requesterBedType: data.requesterBedType || "Unknown",
+        targetStudentId: data.targetStudentId,
+        targetName: data.targetName || "Unknown Target",
+        targetEmail: data.targetEmail || "No Email",
+        targetHostel: data.targetHostel || "Unknown",
+        targetRoom: data.targetRoom || "Unknown",
+        targetBedType: data.targetBedType || "Unknown",
+        message: data.message || "",
+        status: data.status,
+        createdAt:
+          data.createdAt?.toDate?.()?.toISOString() ||
+          (data.createdAt as any)?.toDate?.()?.toISOString() ||
+          data.createdAt ||
+          new Date().toISOString(),
+        type: data.requesterId === user.id ? "sent" : "received",
+      } as SwapRequest;
+    };
+
+    // Listen to sent requests
+    const unsubscribeSent = onSnapshot(
+      sentQuery,
+      (snapshot) => {
+        const sentData = snapshot.docs.map(processSnapshot);
+
+        setRecentRequests((prev) => {
+          const currentReceived = prev.filter((r) => r.type === "received");
+          const combined = [...currentReceived, ...sentData];
+          const unique = Array.from(
+            new Map(combined.map((item) => [item.id, item])).values()
+          );
+          // Sort by date desc (newest first)
+          return unique.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        });
+        setRequestsLoading(false);
+      },
+      (error) => {
+        console.error("Error listening to sent requests:", error);
+        setRequestsLoading(false);
+      }
+    );
+
+    // Listen to received requests
+    const unsubscribeReceived = onSnapshot(
+      receivedQuery,
+      (snapshot) => {
+        const receivedData = snapshot.docs.map(processSnapshot);
+
+        setRecentRequests((prev) => {
+          const currentSent = prev.filter((r) => r.type === "sent");
+          const combined = [...currentSent, ...receivedData];
+          const unique = Array.from(
+            new Map(combined.map((item) => [item.id, item])).values()
+          );
+          return unique.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        });
+        setRequestsLoading(false);
+      },
+      (error) => {
+        console.error("Error listening to received requests:", error);
+        setRequestsLoading(false);
+      }
+    );
+
+    return () => {
+      unsubscribeSent();
+      unsubscribeReceived();
+    };
+  }, [user]);
 
   const handleSwapRequest = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +143,7 @@ const Dashboard: React.FC = () => {
       await api.post("/api/swap/request", swapRequest);
       toast.success("Swap request sent successfully!");
       setSwapRequest({ targetStudentId: "", message: "" });
-      fetchRecentRequests();
+      // No need to manually fetch - Firestore listener will update automatically
     } catch (error: any) {
       toast.error(
         error.response?.data?.message || "Failed to send swap request"
@@ -244,7 +334,10 @@ const Dashboard: React.FC = () => {
               </h2>
             </div>
 
-            <form onSubmit={handleSwapRequest} className="space-y-3 sm:space-y-4">
+            <form
+              onSubmit={handleSwapRequest}
+              className="space-y-3 sm:space-y-4"
+            >
               <div>
                 <label
                   htmlFor="targetStudentId"
@@ -330,9 +423,9 @@ const Dashboard: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-2 sm:space-y-3">
-                {recentRequests.slice(0, 3).map((request, index) => (
+                {recentRequests.slice(0, 3).map((request) => (
                   <div
-                    key={index}
+                    key={request.id}
                     className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl sm:rounded-2xl hover:shadow-md transition-all duration-300 gap-3"
                   >
                     <div className="flex items-center flex-1 min-w-0">
@@ -362,11 +455,9 @@ const Dashboard: React.FC = () => {
                         <p className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
                           {request.targetStudentId || request.requesterId}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 sm:hidden">
-                          {new Date(request.createdAt).toLocaleDateString()}
-                        </p>
                       </div>
                     </div>
+
                     <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-0">
                       <span className="hidden sm:inline text-xs text-gray-500 dark:text-gray-400">
                         {new Date(request.createdAt).toLocaleDateString()}
@@ -381,6 +472,9 @@ const Dashboard: React.FC = () => {
                           {request.status}
                         </span>
                       </span>
+                    </div>
+                    <div className="sm:hidden text-xs text-gray-500 dark:text-gray-400 pl-11">
+                      {new Date(request.createdAt).toLocaleDateString()}
                     </div>
                   </div>
                 ))}
