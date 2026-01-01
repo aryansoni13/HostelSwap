@@ -39,8 +39,8 @@ const Navbar: React.FC = () => {
             className="flex items-center space-x-1.5 sm:space-x-2 text-lg sm:text-xl font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
           >
             <RefreshCw className="h-5 w-5 sm:h-6 sm:w-6" />
-            <span className="hidden sm:inline">HostelSwap</span>
-            <span className="sm:hidden">HS</span>
+            <span className="hidden sm:inline">Swaphive</span>
+            <span className="sm:hidden">SH</span>
           </Link>
 
           {/* Desktop Navigation */}

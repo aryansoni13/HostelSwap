@@ -1,33 +1,43 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { RefreshCw, Users, Shield, Zap, ArrowRight } from 'lucide-react'
+import React from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { RefreshCw, Users, Shield, Zap, ArrowRight } from "lucide-react";
 
 const Home: React.FC = () => {
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   const features = [
     {
-      icon: <RefreshCw className="h-8 w-8 text-primary-600 dark:text-primary-400" />,
-      title: 'Easy Room Swapping',
-      description: 'Request and manage room swaps with other students seamlessly.'
+      icon: (
+        <RefreshCw className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+      ),
+      title: "Easy Room Swapping",
+      description:
+        "Request and manage room swaps with other students seamlessly.",
     },
     {
-      icon: <Users className="h-8 w-8 text-primary-600 dark:text-primary-400" />,
-      title: 'Student Community',
-      description: 'Connect with fellow students and find the perfect room match.'
+      icon: (
+        <Users className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+      ),
+      title: "Student Community",
+      description:
+        "Connect with fellow students and find the perfect room match.",
     },
     {
-      icon: <Shield className="h-8 w-8 text-primary-600 dark:text-primary-400" />,
-      title: 'Secure Platform',
-      description: 'Your data is protected with industry-standard security measures.'
+      icon: (
+        <Shield className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+      ),
+      title: "Secure Platform",
+      description:
+        "Your data is protected with industry-standard security measures.",
     },
     {
       icon: <Zap className="h-8 w-8 text-primary-600 dark:text-primary-400" />,
-      title: 'Instant Notifications',
-      description: 'Get notified immediately when someone responds to your swap request.'
-    }
-  ]
+      title: "Instant Notifications",
+      description:
+        "Get notified immediately when someone responds to your swap request.",
+    },
+  ];
 
   return (
     <div className="animate-fade-in px-4 sm:px-6">
@@ -39,22 +49,27 @@ const Home: React.FC = () => {
               <RefreshCw className="h-12 w-12 sm:h-16 sm:w-16 text-primary-600 dark:text-primary-400" />
             </div>
           </div>
-          
+
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 px-4">
             Hostel Room
-            <span className="text-primary-600 dark:text-primary-400"> Swapping</span>
-            <br />Made Simple
+            <span className="text-primary-600 dark:text-primary-400">
+              {" "}
+              Swapping
+            </span>
+            <br />
+            Made Simple
           </h1>
-          
+
           <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed px-4">
-            Connect with fellow students, find your ideal room, and make the swap process effortless. 
-            Join our community of students who've already found their perfect hostel match.
+            Connect with fellow students, find your ideal room, and make the
+            swap process effortless. Join our community of students who've
+            already found their perfect hostel match.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
             {user ? (
-              <Link 
-                to="/dashboard" 
+              <Link
+                to="/dashboard"
                 className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base"
               >
                 Go to Dashboard
@@ -62,15 +77,15 @@ const Home: React.FC = () => {
               </Link>
             ) : (
               <>
-                <Link 
-                  to="/register" 
+                <Link
+                  to="/register"
                   className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base"
                 >
                   Get Started
                   <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                 </Link>
-                <Link 
-                  to="/login" 
+                <Link
+                  to="/login"
                   className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-xl border-2 border-gray-300 dark:border-gray-600 hover:border-primary-600 dark:hover:border-primary-400 transition-all duration-200 hover:scale-105 text-sm sm:text-base"
                 >
                   Sign In
@@ -86,18 +101,18 @@ const Home: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-8 sm:mb-12 md:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
-              Why Choose HostelSwap?
+              Why Choose Swaphive?
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              We've built the most intuitive platform for hostel room swapping, 
+              We've built the most intuitive platform for hostel room swapping,
               designed specifically for students by students.
             </p>
           </div>
-          
+
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {features.map((feature, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="card p-4 sm:p-6 text-center hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
               >
                 <div className="flex justify-center mb-3 sm:mb-4">
@@ -127,11 +142,12 @@ const Home: React.FC = () => {
               Ready to Find Your Perfect Room?
             </h2>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto">
-              Join thousands of students who have successfully swapped their hostel rooms. 
-              It's free, secure, and takes less than 2 minutes to get started.
+              Join thousands of students who have successfully swapped their
+              hostel rooms. It's free, secure, and takes less than 2 minutes to
+              get started.
             </p>
-            <Link 
-              to="/register" 
+            <Link
+              to="/register"
               className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base"
             >
               Create Your Account
@@ -141,7 +157,7 @@ const Home: React.FC = () => {
         </section>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
